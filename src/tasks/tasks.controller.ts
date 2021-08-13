@@ -1,8 +1,22 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  Query
+} from '@nestjs/common';
+
 import { TasksService } from './tasks.service';
-import { Task, TaskStatus } from './taks.model';
-import { CreateTaskDto } from './dtos/create-task.dto';
-import { GetTaskFilterDto } from './dtos/get-task-filter.dto';
+import { Task } from './taks.model';
+
+import {
+  CreateTaskDto,
+  GetTaskFilterDto,
+  UpdateTaskStatusDto
+} from './dtos';
 
 @Controller('tasks')
 export class TasksController {
@@ -11,13 +25,10 @@ export class TasksController {
 
   @Get()
   fetchAllTasks(
-    @Query('') filterDto: GetTaskFilterDto
+    @Query() filterDto: GetTaskFilterDto
   ): Task[] {
 
-    // If we have any filter defined, call _tasksSvc.getTasksWithFilters
-    // otherwise, just call this._tasksSvc.fetchAllTasks
     if (Object.keys(filterDto).length) {
-      // ...
       return this._tasksSvc.getTasksWithFilters(filterDto);
     } else {
       return this._tasksSvc.fetchAllTasks();
@@ -38,9 +49,10 @@ export class TasksController {
   @Put(':taskId/:taskStatus')
   updateTaks(
     @Param('taskId') taskId: string,
-    @Body('status') taskStatus: TaskStatus
+    @Body() updateTaskStatus: UpdateTaskStatusDto
   ): Task {
-    return this._tasksSvc.updateTaks(taskId, taskStatus);
+    const { status } = updateTaskStatus;
+    return this._tasksSvc.updateTaks(taskId, status);
   }
 
   @Delete(':taskId')

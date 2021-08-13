@@ -15,10 +15,7 @@ export class TasksService {
 
   getTaskById(taskId: string): Task {
     const taskDB = this.tasks.find(task => task.id === taskId);
-    if(!taskDB) throw new NotFoundException({
-      statusCode: 404,
-      message: `the task with ID: ${taskId} does not exist`
-    });
+    if(!taskDB) throw new NotFoundException(`the task with ID: ${taskId} not found`);
     return taskDB;
   }
 
@@ -62,10 +59,7 @@ export class TasksService {
 
   deleteTask(taskId: string): Task[] {
     const taskIndex = this.tasks.findIndex(task => task.id === taskId);
-    if(taskIndex < 0) throw new NotFoundException({
-      statusCode: 404,
-      message: `the task with ID: ${taskId} does not exist`
-    });
+    if(taskIndex < 0) throw new NotFoundException(`the task with ID: ${taskId} not found`);
     return this.tasks.splice(taskIndex, 1);
   }
 
